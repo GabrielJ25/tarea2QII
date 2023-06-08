@@ -1,0 +1,122 @@
+using System;
+using System.Collections.Generic;
+
+class Estudiante
+{
+    public string Nombre { get; set; }
+    public int Edad { get; set; }
+    public string Carrera { get; set; }
+
+    public Estudiante(string nombre, int edad, string carrera)
+    {
+        Nombre = nombre;
+        Edad = edad;
+        Carrera = carrera;
+    }
+}
+
+class Program
+{
+    static List<Estudiante> estudiantes = new List<Estudiante>();
+
+    static void Main(string[] args)
+    {
+        bool salir = false;
+
+        while (!salir)
+        {
+            Console.WriteLine("===== MENÚ PRINCIPAL =====");
+            Console.WriteLine("1. Agregar estudiante");
+            Console.WriteLine("2. Borrar estudiante");
+            Console.WriteLine("3. Modificar estudiante");
+            Console.WriteLine("4. Consultar estudiantes");
+            Console.WriteLine("5. Imprimir estudiantes");
+            Console.WriteLine("6. Inicializar arreglo");
+            Console.WriteLine("7. Salir");
+            Console.Write("Ingrese una opción: ");
+            string opcion = Console.ReadLine();
+
+            switch (opcion)
+            {
+                case "1":
+                    AgregarEstudiante();
+                    break;
+                case "2":
+                    BorrarEstudiante();
+                    break;
+                case "3":
+                    ModificarEstudiante();
+                    break;
+                case "4":
+                    ConsultarEstudiantes();
+                    break;
+                case "5":
+                    ImprimirEstudiantes();
+                    break;
+                case "6":
+                    InicializarArreglo();
+                    break;
+                case "7":
+                    salir = true;
+                    break;
+                default:
+                    Console.WriteLine("Opción inválida. Por favor, seleccione una opción válida.");
+                    break;
+            }
+
+            Console.WriteLine();
+        }
+    }
+
+    static void AgregarEstudiante()
+    {
+        Console.WriteLine("===== AGREGAR ESTUDIANTE =====");
+        Console.Write("Ingrese el nombre del estudiante: ");
+        string nombre = Console.ReadLine();
+        Console.Write("Ingrese la edad del estudiante: ");
+        int edad = int.Parse(Console.ReadLine());
+        Console.Write("Ingrese la carrera del estudiante: ");
+        string carrera = Console.ReadLine();
+
+        Estudiante estudiante = new Estudiante(nombre, edad, carrera);
+        estudiantes.Add(estudiante);
+
+        Console.WriteLine("Estudiante agregado exitosamente.");
+    }
+
+    static void BorrarEstudiante()
+    {
+        Console.WriteLine("===== BORRAR ESTUDIANTE =====");
+        Console.Write("Ingrese el nombre del estudiante a borrar: ");
+        string nombre = Console.ReadLine();
+
+        Estudiante estudiante = estudiantes.Find(e => e.Nombre == nombre);
+
+        if (estudiante != null)
+        {
+            estudiantes.Remove(estudiante);
+            Console.WriteLine("Estudiante borrado exitosamente.");
+        }
+        else
+        {
+            Console.WriteLine("No se encontró ningún estudiante con ese nombre.");
+        }
+    }
+
+    static void ModificarEstudiante()
+    {
+        Console.WriteLine("===== MODIFICAR ESTUDIANTE =====");
+        Console.Write("Ingrese el nombre del estudiante a modificar: ");
+        string nombre = Console.ReadLine();
+
+        Estudiante estudiante = estudiantes.Find(e => e.Nombre == nombre);
+
+        if (estudiante != null)
+        {
+            Console.WriteLine("Ingrese los nuevos datos del estudiante:");
+
+            Console.Write("Nuevo nombre: ");
+            estudiante.Nombre = Console.ReadLine();
+
+            Console.Write("Nueva edad: ");
+           
