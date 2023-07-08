@@ -1,0 +1,147 @@
+using System;
+using System.Collections.Generic;
+
+public class Libro
+{
+    public string Titulo { get; set; }
+    public string Autor { get; set; }
+    public int AnioPublicacion { get; set; }
+    public decimal Precio { get; set; }
+    public bool Disponible { get; set; }
+
+    public void Prestar() => Disponible = false;
+    public void Devolver() => Disponible = true;
+    public void MostrarInformacion()
+    {
+        Console.WriteLine("Título: {0}", Titulo);
+        Console.WriteLine("Autor: {0}", Autor);
+        Console.WriteLine("Año de publicación: {0}", AnioPublicacion);
+        Console.WriteLine("Precio: {0}", Precio);
+        Console.WriteLine("Disponible: {0}", Disponible ? "Sí" : "No");
+    }
+}
+
+public class Biblioteca
+{
+    private List<Libro> libros;
+
+    public Biblioteca()
+    {
+        libros = new List<Libro>();
+    }
+
+    public void AgregarLibro(Libro libro) => libros.Add(libro);
+    public void EliminarLibro(Libro libro) => libros.Remove(libro);
+
+    public void MostrarLibros()
+    {
+        Console.WriteLine("Libros en la biblioteca:");
+        foreach (var libro in libros)
+        {
+            libro.MostrarInformacion();
+            Console.WriteLine();
+        }
+    }
+}
+
+public class Program
+{
+    static void Main(string[] args)
+    {
+        Biblioteca biblioteca = new Biblioteca();
+
+        bool salir = false;
+        while (!salir)
+        {
+            Console.WriteLine("----- Biblioteca Virtual -----");
+            Console.WriteLine("1. Agregar un libro a la biblioteca");
+            Console.WriteLine("2. Eliminar un libro de la biblioteca");
+            Console.WriteLine("3. Mostrar todos los libros de la biblioteca");
+            Console.WriteLine("4. Salir");
+
+            Console.Write("Ingrese una opción: ");
+            if (int.TryParse(Console.ReadLine(), out int opcion))
+            {
+                switch (opcion)
+                {
+                    case 1:
+                        Console.WriteLine("----- Agregar un libro -----");
+                        Libro libro = LeerDatosLibro();
+                        biblioteca.AgregarLibro(libro);
+                        break;
+                    case 2:
+                        Console.WriteLine("----- Eliminar un libro -----");
+                        Libro libroEliminar = SeleccionarLibro(biblioteca);
+                        biblioteca.EliminarLibro(libroEliminar);
+                        break;
+                    case 3:
+                        Console.WriteLine("----- Mostrar todos los libros -----");
+                        biblioteca.MostrarLibros();
+                        break;
+                    case 4:
+                        salir = true;
+                        Console.WriteLine("¡Hasta luego!");
+                        break;
+                    default:
+                        Console.WriteLine("Opción inválida. Por favor, ingrese una opción válida.");
+                        break;
+                }
+            }
+            else
+            {
+                Console.WriteLine("Opción inválida. Por favor, ingrese una opción válida.");
+            }
+
+            Console.WriteLine();
+        }
+    }
+
+    static Libro LeerDatosLibro()
+    {
+        Console.Write("Título: ");
+        string titulo = Console.ReadLine();
+
+        Console.Write("Autor: ");
+        string autor = Console.ReadLine();
+
+        Console.Write("Año de publicación: ");
+        int anioPublicacion = int.TryParse(Console.ReadLine(), out int anio) ? anio : 0;
+
+        Console.Write("Precio: ");
+        decimal precio = decimal.TryParse(Console.ReadLine(), out decimal p) ? p : 0;
+
+        Console.Write("Disponible (Sí/No): ");
+        bool disponible = Console.ReadLine().Equals("Sí", StringComparison.OrdinalIgnoreCase);
+
+        return new Libro
+        {
+            Titulo = titulo,
+            Autor = autor,
+            AnioPublicacion = anioPublicacion,
+            Precio = precio,
+            Disponible = disponible
+        };
+    }
+
+    static Libro SeleccionarLibro(Biblioteca biblioteca)
+    {
+        Console.WriteLine("Libros en la biblioteca:");
+        int contador = 1;
+        foreach (var libro in biblioteca.ObtenerLibros())
+        {
+            Console.WriteLine("{0}. {1}", contador, libro.Titulo);
+            contador++;
+        }
+
+        Console.Write("Seleccione un libro (ingrese el número): ");
+        if (int.TryParse(Console.ReadLine(), out int numero) && numero >= 1 && numero <= biblioteca.ObtenerLibros().Count)
+        {
+            return biblioteca.ObtenerLibros()[numero - 1];
+        }
+        else
+        {
+            Console.WriteLine("Número de libro inválido.");
+            return null;
+        }
+    }
+}
